@@ -62,3 +62,47 @@ cardBody.innerHTML=`
 
 setTimeout (cargarImagenes,1000);
 
+/*juan navarrete*/ 
+
+function agregarBotonHabilidades () {
+try {
+    const tarjetas = document.querySelectorAll(".tarjetaPokemon"); 
+    tarjetas.forEach ((card,index)=> {
+       const idPokemon = index +1;
+       const containerActions = document.getElementById (`card-actions-${idPokemon}`);
+       const BotonHabilidades = document.createElement ("button");
+       BotonHabilidades.classList.add ("btn");
+       BotonHabilidades.innerText = "Habilidades";
+       BotonHabilidades.addEventListener ("click",async ()=>{
+       await mostrarModalHabilidades (idPokemon);
+
+       });
+       containerActions.appendChild (BotonHabilidades);
+    });
+} catch (error) {
+   console.log ("error en el modulo de Juan Navarrete") 
+}
+}   
+
+async function mostrarModalHabilidades (id){
+    const modal = document.getElementById ("modal-overlay");
+    const modalBody = document.getElementById ("modal-body");
+    try {
+        modal.classList.remove ("hidden");
+        modalBody.innerHTML = `<div class= "spinner"> Cargando Habilidades </div>`;
+        const resp = await fetch (`https://pokeapi.co/api/v2/pokemon/${id}/`);
+        if(!resp.ok){
+    console.log ("Error al obtener las habilidades");
+}
+const data = await resp.json (); 
+const listaHabilidades = data.abilities.map(item => `<li><strong>${item.ability.name.toUpperCase()}</strong>${item.is_hidden ?'(oculta)':''}</li>`).join("");
+modalBody.innerHTML =  `<h2> Habilidades de ${data.name.toUpperCase()} </h2>
+<ul> ${listaHabilidades} </ul>`;
+    } catch (error) {
+        console.log ("no se cargaron las habilidades")
+    } 
+}
+document.getElementById ("close-modal").addEventListener ("click",()=>{
+    document.getElementById ("modal-overlay").classList.add("hidden");
+});
+setTimeout (agregarBotonHabilidades,1500);
