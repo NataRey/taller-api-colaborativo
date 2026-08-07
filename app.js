@@ -157,3 +157,39 @@ function baseExperiencia() {
 }
 
 setTimeout(baseExperiencia, 1500);
+
+/** Rama Juan Felipe Hincapié Modulo Game index (videojuegos) */
+
+function agregarBotonjuegos() {
+ const tarjetas = document.querySelectorAll(".tarjetaPokemon");
+ tarjetas.forEach((card, index) => {
+    const idP = index + 1;
+    const containerActions = document.getElementById (`card-actions-${idP}`);
+    const botonJuegos = document.createElement("button");
+        botonJuegos.classList.add("btn");
+        botonJuegos.innerText = "Juegos";
+        botonJuegos.style.backgroundColor = "#B80DC5";
+        botonJuegos.addEventListener("click", async ()=>{
+            console.log("hizo clic");
+            /** despues de activar el botón se llama al try y el fetch (dentro de la funcion) */
+            try{
+                const respuesta = await fetch(`https://pokeapi.co/api/v2/pokemon/${idP}`);
+                const recepcionDatos = await respuesta.json();
+                const modal = document.getElementById ("modal-overlay");
+                const modalBody = document.getElementById ("modal-body");
+                modal.classList.remove("hidden");
+                let vistaJuegos = `<div style = "display: flex; flex-wrap: wrap; gap:5px;">`;
+                for (let i = 0; i < recepcionDatos.game_indices.length; i++ ){
+                    const juegos = recepcionDatos.game_indices[i];
+                    vistaJuegos += `<span style = "background: #9405fa; padding: 4px 8px; border-radius: 6px;">${juegos.version.name} (Indice: ${juegos.game_index}) </span>`;
+                }
+                vistaJuegos += `</div>`;
+                modalBody.innerHTML = `<h2>cantidad de juegos ${recepcionDatos.game_indices.length}</h2> ${vistaJuegos}`;
+            }catch(error){
+                console.log("Error en el modulo de Juan Felipe Hincapié");
+            }
+        });
+        containerActions.appendChild(botonJuegos); 
+ })   
+}
+setTimeout(agregarBotonjuegos, 1500);
