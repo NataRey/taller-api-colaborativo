@@ -106,3 +106,54 @@ document.getElementById ("close-modal").addEventListener ("click",()=>{
     document.getElementById ("modal-overlay").classList.add("hidden");
 });
 setTimeout (agregarBotonHabilidades,1500);
+
+
+
+/*Rama Diego Galvis. Módulo experiencia*/
+
+function baseExperiencia() {
+    try {
+       const tarjetas = document.querySelectorAll(".tarjetaPokemon");
+       tarjetas.forEach ((card,index)=> {
+       const idPokemon = index +1;
+       const containerActions = document.getElementById (`card-actions-${idPokemon}`);
+       const botonExperiencia = document.createElement ("button");
+           botonExperiencia.classList.add("btn");
+           botonExperiencia.style.backgroundColor = "#25592D";
+       botonExperiencia.innerText = "Experiencia";
+           botonExperiencia.addEventListener("click", async () => {
+        const respuesta = await fetch(`https://pokeapi.co/api/v2/pokemon/${idPokemon}`);
+        const recepcionDatos = await respuesta.json();
+               
+               const nivelDeExperiencia = recepcionDatos.base_experience > 100 ? " Experiencia  alta " : "Experiencia básica";
+               const textoCompleto = ` Base Experiencia :  ${recepcionDatos.base_experience} -${nivelDeExperiencia}`;
+               
+               let printExperiencia = card.querySelector(".experiencia");
+               if (!printExperiencia) {
+                   printExperiencia = document.createElement("p");
+                   printExperiencia.className = "experiencia";
+                   printExperiencia.style.color = "#B2D6B9";
+                   printExperiencia.style.fontWeight = "bold";
+                   card.appendChild(printExperiencia);
+               }
+               printExperiencia.innerText = "";
+               let i = 0;
+               const time = setInterval(() => {
+                   if (i < textoCompleto.length) {
+                       printExperiencia.innerText += textoCompleto.charAt(i);
+                       i++;
+                   } else {
+                       clearInterval(time);
+                   }
+                
+               }, 50);
+
+       });
+       containerActions.appendChild (botonExperiencia);
+    });
+    } catch (error) {
+        console.log("Error en el módulo de Diego");
+    }
+}
+
+setTimeout(baseExperiencia, 1500);
